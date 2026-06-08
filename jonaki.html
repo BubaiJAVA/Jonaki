@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Jonaki - Happy Birthday | 3D Animated Love Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: #0a0a2a;
+        }
+
+        /* Canvas for 2D animations - smooth and reliable */
+        #animation-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+        }
+
+        .carousel {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        .content {
+            max-width: 800px;
+            background: rgba(8, 12, 30, 0.85);
+            padding: 2rem 2.5rem;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 200, 100, 0.7);
+            backdrop-filter: blur(12px);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(35px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #FFE6AA, #FFB347, #FF6F4A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            background: linear-gradient(120deg, #FFDEA5, #FFAD5C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #fff5e6;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .typewriter {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #fff2cc;
+            border-right: 3px solid #ffbb55;
+            display: inline-block;
+            white-space: pre-wrap;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: #ffbb55; }
+            50% { border-color: transparent; }
+        }
+
+        .photo-frame {
+            position: relative;
+            display: inline-block;
+            margin: 20px auto;
+            border-radius: 40px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 0 0 4px #ffcc66, 0 0 0 10px rgba(255, 200, 80, 0.4);
+        }
+        .photo-frame img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            border-radius: 36px;
+        }
+        .petal-ring {
+            position: absolute;
+            top: -18px;
+            left: -18px;
+            right: -18px;
+            bottom: -18px;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: spinRing 10s linear infinite;
+        }
+        .petal-ring::before, .petal-ring::after {
+            content: "🌻";
+            position: absolute;
+            font-size: 35px;
+            filter: drop-shadow(0 0 4px gold);
+            animation: orbitRing 8s linear infinite;
+        }
+        .petal-ring::before { top: -28px; left: 25%; }
+        .petal-ring::after { bottom: -28px; right: 20%; animation-duration: 10s; }
+        @keyframes spinRing { 100% { transform: rotate(360deg); } }
+        @keyframes orbitRing {
+            0% { transform: rotate(0deg) translateX(55px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
+        }
+
+        .cake-area {
+            font-size: 70px;
+            margin: 20px 0;
+            animation: bounce 0.8s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-12px); }
+        }
+
+        .heart-beat {
+            animation: heartbeat 1s infinite;
+            display: inline-block;
+        }
+        @keyframes heartbeat {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.2); text-shadow: 0 0 20px #ff6699; }
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 999;
+            background: rgba(0,0,0,0.8);
+            border-radius: 50px;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid #ffcc55;
+            color: #ffcc55;
+            font-size: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .music-btn:hover {
+            background: #ffb347;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 760px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            p, .typewriter { font-size: 0.95rem; }
+            .photo-frame img { width: 170px; height: 170px; }
+            .content { padding: 1.2rem; margin: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="animation-canvas"></canvas>
+
+<div class="carousel" id="carousel"></div>
+
+<div class="music-btn" id="musicToggle">
+    <i class="fas fa-music"></i>
+</div>
+
+<script>
+    // ==================== POWERFUL CANVAS ANIMATION ENGINE ====================
+    const canvas = document.getElementById('animation-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let canvasWidth, canvasHeight;
+    let animationId = null;
+    let activeAnimationType = null;
+    
+    // Animation objects
+    let particles = [];
+    let butterflies = [];
+    let birds = [];
+    let raindrops = [];
+    let flowers = [];
+    let lotuses = [];
+    let sunflowers = [];
+    let roses = [];
+    let fireSparks = [];
+    let glowingOrbs = [];
+    let floatingHearts = [];
+    
+    function resizeCanvas() {
+        canvasWidth = window.innerWidth;
+        canvasHeight = window.innerHeight;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    function clearAllObjects() {
+        particles = [];
+        butterflies = [];
+        birds = [];
+        raindrops = [];
+        flowers = [];
+        lotuses = [];
+        sunflowers = [];
+        roses = [];
+        fireSparks = [];
+        glowingOrbs = [];
+        floatingHearts = [];
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+    }
+    
+    // ==================== SLIDE 0: FIRE CRACKERS + MOVING SPARKS ====================
+    function animateFirecrackers() {
+        clearAllObjects();
+        for (let i = 0; i < 400; i++) {
+            fireSparks.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                vx: (Math.random() - 0.5) * 3,
+                vy: Math.random() * 4 + 2,
+                size: Math.random() * 5 + 2,
+                color: `hsl(${Math.random() * 50 + 20}, 100%, 60%)`,
+                life: 1
+            });
+        }
+        function draw() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            const grad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            grad.addColorStop(0, '#0a0a2a');
+            grad.addColorStop(1, '#1a1030');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let s of fireSparks) {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fillStyle = s.color;
+                ctx.fill();
+                s.x += s.vx;
+                s.y += s.vy;
+                if (s.y > canvasHeight || s.x < 0 || s.x > canvasWidth) {
+                    s.x = Math.random() * canvasWidth;
+                    s.y = 0;
+                    s.vx = (Math.random() - 0.5) * 3;
+                }
+            }
+            // Extra sparkles
+            for (let i = 0; i < 80; i++) {
+                ctx.fillStyle = `hsl(${Math.random() * 60 + 30}, 100%, 65%)`;
+                ctx.fillRect(Math.random() * canvasWidth, Math.random() * canvasHeight, 3, 3);
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 1: FLOWER PETALS FALLING (MOVEMENT) ====================
+    function animateFallingFlowers() {
+        clearAllObjects();
+        for (let i = 0; i < 220; i++) {
+            flowers.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 10 + 6,
+                vy: Math.random() * 2.5 + 1,
+                vx: (Math.random() - 0.5) * 0.8,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.05,
+                type: Math.random() > 0.6 ? '🌻' : '🌸'
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            const grad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            grad.addColorStop(0, '#0a2a0a');
+            grad.addColorStop(1, '#1a3a1a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let f of flowers) {
+                ctx.font = `${f.size}px "Segoe UI Emoji"`;
+                ctx.save();
+                ctx.translate(f.x, f.y);
+                ctx.rotate(f.rotation);
+                ctx.fillText(f.type, 0, 0);
+                ctx.restore();
+                f.x += f.vx;
+                f.y += f.vy;
+                f.rotation += f.rotSpeed;
+                if (f.y > canvasHeight) {
+                    f.y = -20;
+                    f.x = Math.random() * canvasWidth;
+                }
+                if (f.x < 0) f.x = canvasWidth;
+                if (f.x > canvasWidth) f.x = 0;
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 2: RAIN ANIMATION (HEAVY MOVEMENT) ====================
+    function animateRain() {
+        clearAllObjects();
+        for (let i = 0; i < 500; i++) {
+            raindrops.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                length: Math.random() * 18 + 8,
+                speed: Math.random() * 10 + 5
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#0a1025';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.strokeStyle = '#88bbff';
+            ctx.lineWidth = 2;
+            for (let r of raindrops) {
+                ctx.beginPath();
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x, r.y + r.length);
+                ctx.stroke();
+                r.y += r.speed;
+                if (r.y > canvasHeight) {
+                    r.y = -r.length;
+                    r.x = Math.random() * canvasWidth;
+                }
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 3: LOTUS FLOATING & ROTATING ====================
+    function animateLotuses() {
+        clearAllObjects();
+        for (let i = 0; i < 35; i++) {
+            lotuses.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 30 + 25,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.6,
+                rotation: Math.random() * Math.PI * 2
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            const grad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            grad.addColorStop(0, '#1a0a2a');
+            grad.addColorStop(1, '#2a1a4a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let l of lotuses) {
+                ctx.font = `${l.size}px "Segoe UI Emoji"`;
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate(l.rotation);
+                ctx.fillStyle = '#ffaacc';
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ff88aa';
+                ctx.fillText('🌸', 0, 0);
+                ctx.restore();
+                l.x += l.vx;
+                l.y += l.vy;
+                l.rotation += 0.01;
+                if (l.x < -50) l.x = canvasWidth + 50;
+                if (l.x > canvasWidth + 50) l.x = -50;
+                if (l.y < -50) l.y = canvasHeight + 50;
+                if (l.y > canvasHeight + 50) l.y = -50;
+            }
+            ctx.shadowBlur = 0;
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 4: SUNFLOWER SPINNING ====================
+    function animateSunflowers() {
+        clearAllObjects();
+        for (let i = 0; i < 30; i++) {
+            sunflowers.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 35 + 28,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.03 + 0.01
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a2a0a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let s of sunflowers) {
+                ctx.save();
+                ctx.translate(s.x, s.y);
+                ctx.rotate(s.rotation);
+                ctx.font = `${s.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ffcc44';
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = '#ffaa33';
+                ctx.fillText('🌻', 0, 0);
+                ctx.restore();
+                s.rotation += s.rotSpeed;
+            }
+            ctx.shadowBlur = 0;
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 5: ROSE PETALS FALLING ====================
+    function animateRoses() {
+        clearAllObjects();
+        for (let i = 0; i < 200; i++) {
+            roses.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 22 + 18,
+                vy: Math.random() * 2.2 + 0.8,
+                vx: (Math.random() - 0.5) * 0.6,
+                rot: Math.random() * Math.PI * 2
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a0a15';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let r of roses) {
+                ctx.font = `${r.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ff6688';
+                ctx.fillText('🌼', r.x, r.y);
+                r.x += r.vx;
+                r.y += r.vy;
+                if (r.y > canvasHeight) {
+                    r.y = -20;
+                    r.x = Math.random() * canvasWidth;
+                }
+                if (r.x < -50) r.x = canvasWidth;
+                if (r.x > canvasWidth + 50) r.x = -50;
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 6: BUTTERFLIES FLYING (MOVEMENT + FLAPPING) ====================
+    function animateButterflies() {
+        clearAllObjects();
+        for (let i = 0; i < 45; i++) {
+            butterflies.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                vx: (Math.random() - 0.5) * 2.5,
+                vy: (Math.random() - 0.5) * 2,
+                size: Math.random() * 28 + 22,
+                wingAngle: 0,
+                wingDir: 0.1
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a2a2a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let b of butterflies) {
+                ctx.font = `${b.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ff88aa';
+                ctx.shadowBlur = 8;
+                ctx.fillText('🦋', b.x, b.y);
+                b.x += b.vx;
+                b.y += b.vy;
+                if (b.x < -30) b.x = canvasWidth + 30;
+                if (b.x > canvasWidth + 30) b.x = -30;
+                if (b.y < -30) b.y = canvasHeight + 30;
+                if (b.y > canvasHeight + 30) b.y = -30;
+            }
+            ctx.shadowBlur = 0;
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 7: BIRDS FLYING ACROSS SCREEN ====================
+    function animateBirds() {
+        clearAllObjects();
+        for (let i = 0; i < 25; i++) {
+            birds.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                vx: Math.random() * 2.5 + 1.5,
+                vy: (Math.random() - 0.5) * 0.8,
+                size: Math.random() * 32 + 25,
+                wingFlap: 0
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a2a3a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let b of birds) {
+                ctx.font = `${b.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ccaa77';
+                ctx.fillText('🕊️', b.x, b.y);
+                b.x += b.vx;
+                b.y += b.vy;
+                if (b.x > canvasWidth + 50) {
+                    b.x = -50;
+                    b.y = Math.random() * canvasHeight;
+                }
+                if (b.y < 0 || b.y > canvasHeight) b.vy *= -1;
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 8: LIGHT FIRE CRACKER SPARKS (VIBRANT) ====================
+    function animateLightFirecracker() {
+        clearAllObjects();
+        for (let i = 0; i < 500; i++) {
+            fireSparks.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                vx: (Math.random() - 0.5) * 4,
+                vy: Math.random() * 5 + 2,
+                size: Math.random() * 5 + 2,
+                color: `hsl(${Math.random() * 60 + 20}, 100%, 65%)`
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let s of fireSparks) {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fillStyle = s.color;
+                ctx.fill();
+                s.x += s.vx;
+                s.y += s.vy;
+                if (s.y > canvasHeight || s.x < -50 || s.x > canvasWidth + 50) {
+                    s.x = Math.random() * canvasWidth;
+                    s.y = 0;
+                }
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 9: GLOWING ORBS (FLOATING LIGHTS) ====================
+    function animateGlowingOrbs() {
+        clearAllObjects();
+        for (let i = 0; i < 120; i++) {
+            glowingOrbs.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                radius: Math.random() * 8 + 3,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.6,
+                color: `hsl(${Math.random() * 60 + 30}, 100%, 65%)`
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#0a0a2a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let o of glowingOrbs) {
+                ctx.beginPath();
+                ctx.arc(o.x, o.y, o.radius, 0, Math.PI * 2);
+                ctx.fillStyle = o.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = o.color;
+                ctx.fill();
+                o.x += o.vx;
+                o.y += o.vy;
+                if (o.x < -20) o.x = canvasWidth + 20;
+                if (o.x > canvasWidth + 20) o.x = -20;
+                if (o.y < -20) o.y = canvasHeight + 20;
+                if (o.y > canvasHeight + 20) o.y = -20;
+            }
+            ctx.shadowBlur = 0;
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 10: FLOATING HEARTS ====================
+    function animateHearts() {
+        clearAllObjects();
+        for (let i = 0; i < 80; i++) {
+            floatingHearts.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 28 + 20,
+                vy: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.5
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a0a20';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let h of floatingHearts) {
+                ctx.font = `${h.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ff5577';
+                ctx.fillText('❤️', h.x, h.y);
+                h.y -= h.vy;
+                h.x += h.vx;
+                if (h.y < -50) {
+                    h.y = canvasHeight + 50;
+                    h.x = Math.random() * canvasWidth;
+                }
+                if (h.x < -50) h.x = canvasWidth;
+                if (h.x > canvasWidth + 50) h.x = -50;
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 11: SPARKLING STARS ====================
+    function animateSparklingStars() {
+        clearAllObjects();
+        for (let i = 0; i < 300; i++) {
+            particles.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 4 + 2,
+                alpha: Math.random(),
+                twinkleSpeed: 0.02 + Math.random() * 0.03
+            });
+        }
+        let time = 0;
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#0a0a2a';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            time += 0.03;
+            
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                const brightness = 0.3 + Math.sin(time * p.twinkleSpeed + p.x) * 0.4;
+                ctx.fillStyle = `rgba(255, 220, 100, ${brightness})`;
+                ctx.fill();
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 12: DANCING LOTUS PETALS ====================
+    function animateDancingLotuses() {
+        clearAllObjects();
+        for (let i = 0; i < 40; i++) {
+            lotuses.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 28 + 22,
+                vx: (Math.random() - 0.5) * 1,
+                vy: (Math.random() - 0.5) * 0.8,
+                rotation: Math.random() * Math.PI * 2
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#1a1030';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let l of lotuses) {
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate(l.rotation);
+                ctx.font = `${l.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ffbbdd';
+                ctx.fillText('🌸', 0, 0);
+                ctx.restore();
+                l.x += l.vx;
+                l.y += l.vy;
+                l.rotation += 0.015;
+                if (l.x < -50) l.x = canvasWidth + 50;
+                if (l.x > canvasWidth + 50) l.x = -50;
+                if (l.y < -50) l.y = canvasHeight + 50;
+                if (l.y > canvasHeight + 50) l.y = -50;
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 13: FLOATING FEATHERS ====================
+    function animateFeathers() {
+        clearAllObjects();
+        for (let i = 0; i < 180; i++) {
+            flowers.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 20 + 15,
+                vy: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.7,
+                char: Math.random() > 0.5 ? '🪶' : '✨'
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = '#0a1520';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let f of flowers) {
+                ctx.font = `${f.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#aaddff';
+                ctx.fillText(f.char, f.x, f.y);
+                f.x += f.vx;
+                f.y += f.vy;
+                if (f.y > canvasHeight) {
+                    f.y = -20;
+                    f.x = Math.random() * canvasWidth;
+                }
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 14: SUNFLOWER PETAL RING (PHOTO SLIDE) ====================
+    function animateSunflowerPhoto() {
+        clearAllObjects();
+        for (let i = 0; i < 50; i++) {
+            sunflowers.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 28 + 22,
+                angle: Math.random() * Math.PI * 2,
+                radius: Math.random() * 150 + 50,
+                centerX: canvasWidth / 2,
+                centerY: canvasHeight / 2
+            });
+        }
+        let time = 0;
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            const grad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            grad.addColorStop(0, '#1a2a0a');
+            grad.addColorStop(1, '#2a3a1a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            time += 0.01;
+            
+            for (let s of sunflowers) {
+                const x = s.centerX + Math.cos(time + s.angle) * s.radius;
+                const y = s.centerY + Math.sin(time * 0.7 + s.angle) * (s.radius * 0.6);
+                ctx.font = `${s.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ffcc55';
+                ctx.fillText('🌻', x, y);
+            }
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // ==================== SLIDE 15: FINAL LOTUS BLOOM ====================
+    function animateFinalLotus() {
+        clearAllObjects();
+        for (let i = 0; i < 45; i++) {
+            lotuses.push({
+                x: Math.random() * canvasWidth,
+                y: Math.random() * canvasHeight,
+                size: Math.random() * 32 + 26,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.5,
+                rotation: Math.random() * Math.PI * 2
+            });
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            const grad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            grad.addColorStop(0, '#1a0a2a');
+            grad.addColorStop(1, '#3a1a5a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            for (let l of lotuses) {
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate(l.rotation);
+                ctx.font = `${l.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#ffbbdd';
+                ctx.shadowBlur = 12;
+                ctx.fillText('🌸', 0, 0);
+                ctx.restore();
+                l.x += l.vx;
+                l.y += l.vy;
+                l.rotation += 0.008;
+                if (l.x < -50) l.x = canvasWidth + 50;
+                if (l.x > canvasWidth + 50) l.x = -50;
+                if (l.y < -50) l.y = canvasHeight + 50;
+                if (l.y > canvasHeight + 50) l.y = -50;
+            }
+            ctx.shadowBlur = 0;
+            animationId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    
+    // Map each slide to a UNIQUE animation (no repeats)
+    const slideAnimations = [
+        animateFirecrackers,      // slide 0 - fire crackers
+        animateFallingFlowers,    // slide 1 - falling flowers
+        animateRain,              // slide 2 - rain
+        animateLotuses,           // slide 3 - lotus floating
+        animateSunflowers,        // slide 4 - sunflowers spinning
+        animateRoses,             // slide 5 - rose petals
+        animateButterflies,       // slide 6 - butterflies flying
+        animateBirds,             // slide 7 - birds flying
+        animateLightFirecracker,  // slide 8 - light fire crackers
+        animateGlowingOrbs,       // slide 9 - glowing orbs
+        animateHearts,            // slide 10 - floating hearts
+        animateSparklingStars,    // slide 11 - sparkling stars
+        animateDancingLotuses,    // slide 12 - dancing lotuses
+        animateFeathers,          // slide 13 - floating feathers
+        animateSunflowerPhoto,    // slide 14 - sunflower photo ring
+        animateFinalLotus         // slide 15 - final lotus
+    ];
+    
+    // ==================== CAROUSEL SLIDES DATA ====================
+    const slidesData = [
+        { content: `<div class="content"><h1>🎂 Happy Birthday JONAKI 🎂</h1><div class="cake-area"><span>🎂</span><span>🧁</span><span>🎉</span></div><p>Celebrating the light of my life! Let the magic begin ✨</p></div>` },
+        { content: `<div class="content"><h2>🌻 Sunflower & Lotus — Eternal Love 🌸</h2><div class="typewriter" id="type1"></div></div>`, type: true, text: "You love sunflowers — bright like your soul. I adore lotus — pure and peaceful. Together, we bloom forever. 💛🌸" },
+        { content: `<div class="content"><h2>✨ JONAKI — My Firefly, My Light ✨</h2><div class="typewriter" id="type2"></div></div>`, type: true, text: "I named you Jonaki because you illuminate my darkest nights. You are my eternal glow. I love you, my Jonaki. ❤️" },
+        { content: `<div class="content"><h2>🖤 The Black Mole That Steals My Heart 🖤</h2><p>That tiny black mole beneath your nose makes you uniquely attractive. Every glance at you leaves me speechless. 💫</p></div>` },
+        { content: `<div class="content"><h2>🏔️ Dreams & Adventures Together 🏝️</h2><p>Kedarnath, mountains, beaches — every path together. Hand in hand, we'll turn every dream into reality. 🌄💑</p></div>` },
+        { content: `<div class="content"><h2>🤝 Unconditional Support Always 🤝</h2><p>Live freely. I will never hold you back — I'll be your biggest cheerleader. Your happiness is my priority. 💪❤️</p></div>` },
+        { content: `<div class="content"><h2>💢 Little Fights, Infinite Love 💢</h2><p>Our silly arguments hide a sea of love. Missing you in silence — that feeling is pure bliss. 💕</p></div>` },
+        { content: `<div class="content"><h2>👗 Matching Outfits & Tiny Joys 🧥</h2><p>Matching dresses, cute dates — we celebrate every small moment in our special way. 💖🌟</p></div>` },
+        { content: `<div class="content"><h2>😟 The Beautiful Fear of Losing You 😟</h2><p>This fear makes me love you harder. When you're beside me, I feel invincible. Your presence doubles my spirit. 🛡️💗</p></div>` },
+        { content: `<div class="content"><h2>💎 You Are My Highest Priority 💎</h2><p>No matter how busy, my love for you never fades. You come first, always and forever. 💌</p></div>` },
+        { content: `<div class="content"><h2>🥳 Happy Birthday Again, My Love 🥳</h2><p>Stay happy, keep shining. Your smile makes my world brighter every day. ✨🎂</p></div>` },
+        { content: `<div class="content"><h2>❤️❤️ I LOVE YOU, My Jonaki ❤️❤️</h2><div class="typewriter" id="typeLove"></div></div>`, type: true, text: "Virtual words aren't enough. Face to face, with flowers and chocolate — I LOVE YOU MY JONAKI, forever. 🧡" },
+        { content: `<div class="content"><h2>🌙 This Precious Fear Will Stay Forever 🌙</h2><p>I want this beautiful fear to live in me forever. It keeps me close to you. You are my greatest treasure.</p></div>` },
+        { content: `<div class="content"><h2>💬 Please Say Something... 💬</h2><p>I may not express perfectly, but my love is real. Talk to me, Jonaki. Your voice is my melody. 🥺💗</p></div>` },
+        { content: `<div class="content"><h2>🌻 Special Photo Frame For Jonaki 🌻</h2><div class="photo-frame" id="photoFrame"><img id="livePhoto" src="images/jonaki.jpeg" alt="Our Memory"><div class="petal-ring"></div></div><p style="font-size:0.9rem; margin-top:10px;">✨ Click the photo to upload your favorite picture ✨</p></div>` },
+        { content: `<div class="content"><h1>💖 Happy Birthday Jonaki — My Love, My Lakshmi 💖</h1><p>You are my peace, my joy, my strength. Stay radiant, my love. I will cherish you forever. 🌸✨</p><i class="fas fa-heart heart-beat" style="font-size:70px; color:#ff6699; margin-top:15px; display:inline-block;"></i></div>` }
+    ];
+    
+    const carouselDiv = document.getElementById('carousel');
+    let slideElements = [];
+    let currentSlide = 0;
+    let autoTimer;
+    
+    function buildCarousel() {
+        carouselDiv.innerHTML = '';
+        slideElements = [];
+        slidesData.forEach((data, idx) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = data.content;
+            carouselDiv.appendChild(slide);
+            slideElements.push(slide);
+            
+            if (data.type) {
+                const el = slide.querySelector('.typewriter');
+                if (el) {
+                    let i = 0;
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) {
+                            const writer = () => {
+                                if (i < data.text.length) {
+                                    el.innerHTML += data.text.charAt(i);
+                                    i++;
+                                    setTimeout(writer, 42);
+                                } else el.style.borderRight = 'none';
+                            };
+                            writer();
+                            observer.disconnect();
+                        }
+                    }, { threshold: 0.5 });
+                    observer.observe(el);
+                }
+            }
+            
+            if (idx === 14) {
+                const img = slide.querySelector('#livePhoto');
+                if (img) {
+                    img.onclick = () => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = (e) => {
+                            if (e.target.files[0]) {
+                                img.src = URL.createObjectURL(e.target.files[0]);
+                            }
+                        };
+                        input.click();
+                    };
+                }
+            }
+        });
+    }
+    
+    function startAutoScroll() {
+        if (autoTimer) clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+            let next = (currentSlide + 1) % slideElements.length;
+            slideElements[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 11000);
+    }
+    
+    function monitorSlides() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = slideElements.findIndex(s => s === entry.target);
+                    if (idx !== -1 && idx !== currentSlide) {
+                        currentSlide = idx;
+                        if (slideAnimations[idx]) slideAnimations[idx]();
+                        if (autoTimer) clearInterval(autoTimer);
+                        autoTimer = setInterval(() => {
+                            let next = (currentSlide + 1) % slideElements.length;
+                            slideElements[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 11000);
+                        if (isMusicPlaying) {
+                            playSong(idx % songs.length);
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.55 });
+        slideElements.forEach(s => observer.observe(s));
+    }
+    
+    // Music System
+    const songs = [
+        'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d3748b6d9a.mp3',
+        'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808f8d6e0.mp3',
+        'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8b0e9a0.mp3'
+    ];
+    let currentSong = 0;
+    let audio = new Audio();
+    let isMusicPlaying = false;
+    const musicBtn = document.getElementById('musicToggle');
+    
+    function playSong(idx) {
+        if (!isMusicPlaying) return;
+        audio.pause();
+        audio = new Audio(songs[idx % songs.length]);
+        audio.volume = 0.5;
+        audio.play().catch(e => console.log("Click anywhere to start music"));
+        audio.onended = () => {
+            if (isMusicPlaying) {
+                currentSong = (currentSong + 1) % songs.length;
+                playSong(currentSong);
+            }
+        };
+    }
+    
+    musicBtn.onclick = () => {
+        isMusicPlaying = !isMusicPlaying;
+        if (isMusicPlaying) {
+            playSong(currentSlide);
+            musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            audio.pause();
+            musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+        }
+    };
+    
+    // Initialize
+    buildCarousel();
+    monitorSlides();
+    startAutoScroll();
+    animateFirecrackers(); // Start with first animation
+    
+    document.addEventListener('click', function initMusic() {
+        if (!isMusicPlaying) {
+            isMusicPlaying = true;
+            playSong(0);
+            musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+        document.removeEventListener('click', initMusic);
+    });
+    
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        if (slideAnimations[currentSlide]) slideAnimations[currentSlide]();
+    });
+</script>
+</body>
+</html>
